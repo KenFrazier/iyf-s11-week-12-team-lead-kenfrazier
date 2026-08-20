@@ -6,17 +6,27 @@ function AppContent() {
   const { user, isAuthenticated, logout } = useAuth();
 
   return (
-    <div>
-      <h1>CommunityHub</h1>
+    <div className="app-shell">
+      <header className="navbar">
+        <h1>CommunityHub</h1>
+        {isAuthenticated && (
+          <div className="navbar-user">
+            <span>{user.name} · {user.role}</span>
+            <button onClick={logout} className="logout-btn">Logout</button>
+          </div>
+        )}
+      </header>
 
-      {isAuthenticated ? (
-        <div>
-          <p>Logged in as: {user.name} ({user.role})</p>
-          <button onClick={logout}>Logout</button>
-        </div>
-      ) : (
-        <Login />
-      )}
+      <main className="main-content">
+        {isAuthenticated ? (
+          <div className="welcome-panel">
+            <h2>Welcome, {user.name}!</h2>
+            <p>You're logged in as <strong>{user.role}</strong>.</p>
+          </div>
+        ) : (
+          <Login />
+        )}
+      </main>
     </div>
   );
 }
