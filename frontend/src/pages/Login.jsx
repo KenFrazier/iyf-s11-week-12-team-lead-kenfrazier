@@ -14,8 +14,7 @@ function Login() {
     setLoading(true);
 
     try {
-      const user = await login({ email, password });
-      alert(`Welcome back, ${user.name}!`);
+      await login({ email, password });
     } catch (err) {
       setError(err.message);
     } finally {
@@ -24,9 +23,9 @@ function Login() {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="auth-card">
+      <h2>Login to CommunityHub</h2>
+      <form onSubmit={handleSubmit} className="auth-form">
         <input
           type="email"
           value={email}
@@ -45,7 +44,7 @@ function Login() {
           {loading ? 'Logging in...' : 'Login'}
         </button>
       </form>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="error-text">{error}</p>}
     </div>
   );
 }

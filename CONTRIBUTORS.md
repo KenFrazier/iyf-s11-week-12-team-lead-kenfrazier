@@ -1,7 +1,26 @@
 # Contributors
 
-| Name | GitHub | Feature |
-|------|--------|---------|
-| Frazier Kennedy | [@KenFrazier](https://github.com/KenFrazier) | Team Lead — Auth & User Profiles |
-| Ronn Karimi | [@RonnKarimi](https://github.com/RonnKarimi) | Issue Reporting & Listing |
-| Alvan Ninjago | [@ninjago618](https://github.com/ninjago618) | Status Updates & Comments |
+## Team Members
+
+| Name | GitHub | Role | Contributions |
+|------|--------|------|---------------|
+| Frazier Kennedy | KenFrazier | Team Lead | Project setup, backend architecture, MongoDB integration, JWT authentication, authorization, admin dashboard, frontend-backend integration |
+| Ronn Karimi | RonnKarimi | Developer | Issue Reporting and Listing feature |
+| Alvan Ninjago | ninjago618 | Developer | Status Updates and Comments frontend |
+
+## Contribution Breakdown
+
+### Frazier Kennedy
+- Set up the team repository, branch protection, and issue tracking
+- Built the Express backend with routes, controllers, middleware, and models
+- Connected MongoDB Atlas and migrated data from in-memory storage
+- Implemented JWT authentication for register, login, and protected routes
+- Implemented role-based authorization and an admin-only dashboard
+- Built the shared frontend API service layer and connected login end to end
+- Reviewed and merged team pull requests
+
+### Ronn Karimi
+- Building the Issue Reporting and Listing frontend feature
+
+### Alvan Ninjago
+- Built the Status Updates and Comments frontend feature, merged in a pull request
