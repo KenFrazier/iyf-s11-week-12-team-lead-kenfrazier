@@ -1,82 +1,100 @@
-// Initial scaffold by team lead (Frazier Kennedy) to give the team a working
-// starting point. Feature ownership going forward: Ronn Karimi
-// (Feature: Issue Reporting & Listing). Please extend/commit to this file
-// directly so your contributions are reflected in the repo history.
+// Feature ownership: Ronn Karimi (Feature: Issue Reporting & Listing)
+// Now using MongoDB via Mongoose instead of in-memory data.
 
-const store = require('../data/store');
+const Issue = require('../models/Issue');
 
 const VALID_STATUSES = ['reported', 'acknowledged', 'pending', 'resolved'];
 
-const getAllIssues = (req, res) => {
-  const { status, search } = req.query;
+const getAllIssues = async (req, res, next) => {
+  try {
+    const { status, search } = req.query;
 
-  let result = [...store.issues];
+    let query = {};
 
-  if (status) {
-    result = result.filter(issue => issue.status === status);
+    if (status) {
+      query.status = status;
+    }
+
+    if (search) {
+      query.title = { $regex: search, $options: 'i' };
+    }
+
+    const issues = await Issue.find(query)
+      .populate('reportedBy', 'name email')
+      .sort({ createdAt: -1 });
+
+    res.json(issues);
+  } catch (error) {
+    next(error);
   }
-
-  if (search) {
-    result = result.filter(issue =>
-      issue.title.toLowerCase().includes(search.toLowerCase())
-    );
-  }
-
-  res.json(result);
 };
 
-const getIssueById = (req, res) => {
-  const id = parseInt(req.params.id);
-  const issue = store.issues.find(i => i.id === id);
+const getIssueById = async (req, res, next) => {
+  try {
+    const issue = await Issue.findById(req.params.id)
+      .populate('reportedBy', 'name email');
 
-  if (!issue) {
-    return res.status(404).json({ error: 'Issue not found' });
+    if (!issue) {
+      return res.status(404).json({ error: 'Issue not found' });
+    }
+
+    res.json(issue);
+  } catch (error) {
+    if (error.name === 'CastError') {
+      return res.status(400).json({ error: 'Invalid issue ID' });
+    }
+    next(error);
   }
-
-  res.json(issue);
 };
 
-const createIssue = (req, res) => {
-  const { title, description, reportedBy } = req.body;
+const createIssue = async (req, res, next) => {
+  try {
+    const { title, description } = req.body;
 
-  if (!title || !description || !reportedBy) {
-    return res.status(400).json({
-      error: 'Title, description, and reportedBy are required'
+    const issue = new Issue({
+      title,
+      description,
+      reportedBy: req.user._id,
+      status: 'reported'
     });
+
+    await issue.save();
+    await issue.populate('reportedBy', 'name email');
+
+    res.status(201).json(issue);
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map(e => e.message);
+      return res.status(400).json({ errors: messages });
+    }
+    next(error);
   }
-
-  const newIssue = {
-    id: store.getNextIssueId(),
-    title,
-    description,
-    reportedBy,
-    status: 'reported',
-    createdAt: new Date().toISOString()
-  };
-
-  store.issues.push(newIssue);
-  res.status(201).json(newIssue);
 };
 
-const updateIssueStatus = (req, res) => {
-  const id = parseInt(req.params.id);
-  const issue = store.issues.find(i => i.id === id);
+const updateIssueStatus = async (req, res, next) => {
+  try {
+    const { status } = req.body;
 
-  if (!issue) {
-    return res.status(404).json({ error: 'Issue not found' });
+    if (!VALID_STATUSES.includes(status)) {
+      return res.status(400).json({
+        error: `Status must be one of: ${VALID_STATUSES.join(', ')}`
+      });
+    }
+
+    const issue = await Issue.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true, runValidators: true }
+    ).populate('reportedBy', 'name email');
+
+    if (!issue) {
+      return res.status(404).json({ error: 'Issue not found' });
+    }
+
+    res.json(issue);
+  } catch (error) {
+    next(error);
   }
-
-  const { status } = req.body;
-
-  if (!VALID_STATUSES.includes(status)) {
-    return res.status(400).json({
-      error: `Status must be one of: ${VALID_STATUSES.join(', ')}`
-    });
-  }
-
-  issue.status = status;
-  issue.updatedAt = new Date().toISOString();
-  res.json(issue);
 };
 
 module.exports = {

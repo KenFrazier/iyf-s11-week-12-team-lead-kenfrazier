@@ -1,56 +1,87 @@
-// Initial scaffold by team lead (Frazier Kennedy) to give the team a working
-// starting point. Feature ownership going forward: Alvan Ninjago
-// (Feature: Status Updates & Comments). Please extend/commit to this file
-// directly so your contributions are reflected in the repo history.
+// Feature ownership: Alvan Ninjago (Feature: Status Updates & Comments)
 
-const store = require('../data/store');
+const Comment = require('../models/Comment');
+const Issue = require('../models/Issue');
 
-const getComments = (req, res) => {
-  const issueId = parseInt(req.params.id);
-  const issueComments = store.comments.filter(c => c.issueId === issueId);
-  res.json(issueComments);
+const getComments = async (req, res, next) => {
+  try {
+    const comments = await Comment.find({ issue: req.params.id })
+      .populate('author', 'name email role')
+      .sort({ createdAt: -1 });
+
+    const isAdmin = req.user && req.user.role === 'admin';
+
+    const result = comments.map(comment => {
+      const commentObj = comment.toObject();
+      if (isAdmin) {
+        commentObj.isFromSpecialist = comment.author.role === 'specialist';
+      }
+      return commentObj;
+    });
+
+    res.json(result);
+  } catch (error) {
+    if (error.name === 'CastError') {
+      return res.status(400).json({ error: 'Invalid issue ID' });
+    }
+    next(error);
+  }
 };
 
-const addComment = (req, res) => {
-  const issueId = parseInt(req.params.id);
-  const issue = store.issues.find(i => i.id === issueId);
+const addComment = async (req, res, next) => {
+  try {
+    const issue = await Issue.findById(req.params.id);
 
-  if (!issue) {
-    return res.status(404).json({ error: 'Issue not found' });
+    if (!issue) {
+      return res.status(404).json({ error: 'Issue not found' });
+    }
+
+    const { text } = req.body;
+
+    if (!text) {
+      return res.status(400).json({ error: 'Comment text is required' });
+    }
+
+    const comment = new Comment({
+      text,
+      author: req.user._id,
+      issue: req.params.id
+    });
+
+    await comment.save();
+    await comment.populate('author', 'name email role');
+
+    res.status(201).json(comment);
+  } catch (error) {
+    if (error.name === 'CastError') {
+      return res.status(400).json({ error: 'Invalid issue ID' });
+    }
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map(e => e.message);
+      return res.status(400).json({ errors: messages });
+    }
+    next(error);
   }
-
-  const { author, text } = req.body;
-
-  if (!author || !text) {
-    return res.status(400).json({ error: 'Author and text are required' });
-  }
-
-  const newComment = {
-    id: store.getNextCommentId(),
-    issueId,
-    author,
-    text,
-    createdAt: new Date().toISOString()
-  };
-
-  store.comments.push(newComment);
-  res.status(201).json(newComment);
 };
 
-const deleteComment = (req, res) => {
-  const issueId = parseInt(req.params.id);
-  const commentId = parseInt(req.params.commentId);
+const deleteComment = async (req, res, next) => {
+  try {
+    const comment = await Comment.findOneAndDelete({
+      _id: req.params.commentId,
+      issue: req.params.id
+    });
 
-  const commentIndex = store.comments.findIndex(
-    c => c.id === commentId && c.issueId === issueId
-  );
+    if (!comment) {
+      return res.status(404).json({ error: 'Comment not found' });
+    }
 
-  if (commentIndex === -1) {
-    return res.status(404).json({ error: 'Comment not found' });
+    res.status(204).send();
+  } catch (error) {
+    if (error.name === 'CastError') {
+      return res.status(400).json({ error: 'Invalid ID format' });
+    }
+    next(error);
   }
-
-  store.comments.splice(commentIndex, 1);
-  res.status(204).send();
 };
 
 module.exports = {
