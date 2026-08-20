@@ -12,9 +12,7 @@ const protect = async (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1];
-
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
     const user = await User.findById(decoded.id);
 
     if (!user) {
@@ -35,4 +33,15 @@ const protect = async (req, res, next) => {
   }
 };
 
-module.exports = { protect };
+const restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({
+        error: 'You do not have permission to perform this action'
+      });
+    }
+    next();
+  };
+};
+
+module.exports = { protect, restrictTo };
