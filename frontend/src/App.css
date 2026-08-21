@@ -128,3 +128,178 @@ body {
     padding: 1.5rem;
   }
 }
+
+.navbar-links {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-btn {
+  background: transparent;
+  border: 1px solid white;
+  color: white;
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.nav-btn:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+.issues-page {
+  width: 100%;
+  max-width: 700px;
+}
+
+.issue-form {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.issue-form input,
+.issue-form textarea {
+  padding: 0.7rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: white;
+  color: #333;
+  font-family: inherit;
+}
+
+.issue-form textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.issue-form button {
+  background: #1f4e5f;
+  color: white;
+  border: none;
+  padding: 0.7rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.issue-card {
+  background: white;
+  padding: 1.25rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  margin-bottom: 1rem;
+}
+
+.issue-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.issue-header h3 {
+  margin: 0;
+}
+
+.status-badge {
+  color: white;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.issue-meta {
+  color: #777;
+  font-size: 0.85rem;
+  margin-bottom: 0;
+}
+
+.status-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+.status-btn {
+  background: #eee;
+  border: 1px solid #ccc;
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  text-transform: capitalize;
+  cursor: pointer;
+}
+
+.status-btn.active {
+  background: #1f4e5f;
+  color: white;
+  border-color: #1f4e5f;
+}
+
+.status-btn:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.toggle-comments-btn {
+  margin-top: 0.75rem;
+  background: none;
+  border: none;
+  color: #1f4e5f;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.85rem;
+}
+
+.comments-section {
+  margin-top: 0.75rem;
+  border-top: 1px solid #eee;
+  padding-top: 0.75rem;
+}
+
+.comment {
+  margin-bottom: 0.6rem;
+  font-size: 0.9rem;
+}
+
+.comment p {
+  margin: 0.2rem 0 0;
+}
+
+.specialist-tag {
+  color: #9b59b6;
+  font-size: 0.8rem;
+}
+
+.comment-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.comment-form input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.comment-form button {
+  background: #1f4e5f;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
