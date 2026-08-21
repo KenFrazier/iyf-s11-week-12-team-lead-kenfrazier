@@ -55,7 +55,8 @@ const createIssue = async (req, res, next) => {
       title,
       description,
       reportedBy: req.user._id,
-      status: 'reported'
+      status: 'reported',
+      statusHistory: [{ status: 'reported' }]
     });
 
     await issue.save();
@@ -81,15 +82,19 @@ const updateIssueStatus = async (req, res, next) => {
       });
     }
 
-    const issue = await Issue.findByIdAndUpdate(
-      req.params.id,
-      { status },
-      { new: true, runValidators: true }
-    ).populate('reportedBy', 'name email');
+    const issue = await Issue.findById(req.params.id);
 
     if (!issue) {
       return res.status(404).json({ error: 'Issue not found' });
     }
+
+    if (issue.status !== status) {
+      issue.status = status;
+      issue.statusHistory.push({ status });
+      await issue.save();
+    }
+
+    await issue.populate('reportedBy', 'name email');
 
     res.json(issue);
   } catch (error) {

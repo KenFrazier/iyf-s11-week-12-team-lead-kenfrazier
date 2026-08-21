@@ -17,6 +17,9 @@ function IssueCard({ issue, onStatusChange, canManage }) {
   const [commentText, setCommentText] = useState('');
   const [loadingComments, setLoadingComments] = useState(false);
 
+  const latestStatusChange = issue.statusHistory?.[issue.statusHistory.length - 1];
+  const statusChangedAt = latestStatusChange?.changedAt || issue.updatedAt || issue.createdAt;
+
   const loadComments = async () => {
     try {
       setLoadingComments(true);
@@ -58,6 +61,12 @@ function IssueCard({ issue, onStatusChange, canManage }) {
       </div>
       <p>{issue.description}</p>
       <p className="issue-meta">Reported by {issue.reportedBy?.name || 'Unknown'}</p>
+      {statusChangedAt && (
+        <p className="issue-meta">
+          {issue.status === 'resolved' ? 'Resolved' : 'Status updated'} at{' '}
+          {new Date(statusChangedAt).toLocaleString()}
+        </p>
+      )}
 
       {canManage && (
         <div className="status-controls">
@@ -110,6 +119,7 @@ function Issues() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [statusAnnouncement, setStatusAnnouncement] = useState('');
   const { isAuthenticated, user } = useAuth();
 
   const canManage = user && (user.role === 'admin' || user.role === 'elder');
@@ -150,7 +160,13 @@ function Issues() {
 
   const handleStatusChange = async (issueId, newStatus) => {
     try {
-      await issuesAPI.updateStatus(issueId, newStatus);
+      const updatedIssue = await issuesAPI.updateStatus(issueId, newStatus);
+      const previousIssue = issues.find(issue => issue._id === issueId);
+      const changedAt = updatedIssue.statusHistory?.[updatedIssue.statusHistory.length - 1]?.changedAt;
+      const time = changedAt ? new Date(changedAt).toLocaleString() : new Date().toLocaleString();
+      setStatusAnnouncement(
+        `${updatedIssue.title} moved from ${previousIssue?.status || 'reported'} to ${newStatus} at ${time}.`
+      );
       fetchIssues();
     } catch (err) {
       alert(err.message);
@@ -183,6 +199,11 @@ function Issues() {
       )}
 
       {error && <p className="error-text">{error}</p>}
+      {statusAnnouncement && (
+        <p className="status-announcement" role="status" aria-live="polite">
+          {statusAnnouncement}
+        </p>
+      )}
       {loading && <p>Loading issues...</p>}
 
       <div className="issue-list">

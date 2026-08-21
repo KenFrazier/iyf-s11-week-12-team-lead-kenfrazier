@@ -21,7 +21,18 @@ const issueSchema = new mongoose.Schema({
     type: String,
     enum: ['reported', 'acknowledged', 'pending', 'resolved'],
     default: 'reported'
-  }
+  },
+  statusHistory: [{
+    status: {
+      type: String,
+      enum: ['reported', 'acknowledged', 'pending', 'resolved'],
+      required: true
+    },
+    changedAt: {
+      type: Date,
+      default: Date.now
+    }
+  }]
 }, {
   timestamps: true
 });
