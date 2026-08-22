@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 
-function Register() {
+function Register({ onSuccess }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('citizen');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
@@ -15,7 +16,8 @@ function Register() {
     setLoading(true);
 
     try {
-      await register({ name, email, password, role: 'citizen' });
+      await register({ name, email, password, role });
+      if (onSuccess) onSuccess();
     } catch (err) {
       setError(err.message);
     } finally {
@@ -25,17 +27,15 @@ function Register() {
 
   return (
     <div className="auth-card">
-      <h2>Create a CommunityHub Account</h2>
-
+      <h2>Create an Account</h2>
       <form onSubmit={handleSubmit} className="auth-form">
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Name"
+          placeholder="Full name"
           required
         />
-
         <input
           type="email"
           value={email}
@@ -43,21 +43,24 @@ function Register() {
           placeholder="Email"
           required
         />
-
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password (minimum 6 characters)"
+          placeholder="Password (min 6 characters)"
           minLength={6}
           required
         />
-
+        <select value={role} onChange={(e) => setRole(e.target.value)}>
+          <option value="citizen">Citizen</option>
+          <option value="elder">Elder</option>
+          <option value="specialist">Specialist</option>
+          <option value="admin">Admin</option>
+        </select>
         <button type="submit" disabled={loading}>
           {loading ? 'Creating account...' : 'Register'}
         </button>
       </form>
-
       {error && <p className="error-text">{error}</p>}
     </div>
   );

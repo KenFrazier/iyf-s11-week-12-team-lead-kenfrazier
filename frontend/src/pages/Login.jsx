@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 
-function Login() {
+function Login({ onSwitchToRegister }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -12,7 +12,6 @@ function Login() {
     e.preventDefault();
     setError(null);
     setLoading(true);
-
     try {
       await login({ email, password });
     } catch (err) {
@@ -45,6 +44,11 @@ function Login() {
         </button>
       </form>
       {error && <p className="error-text">{error}</p>}
+      {onSwitchToRegister && (
+        <p className="switch-auth">
+          No account? <button onClick={onSwitchToRegister} className="link-btn">Register here</button>
+        </p>
+      )}
     </div>
   );
 }
