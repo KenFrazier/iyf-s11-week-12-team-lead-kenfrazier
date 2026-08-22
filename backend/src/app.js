@@ -15,7 +15,7 @@ const corsOptions = {
       'http://localhost:3000',  // Local
       process.env.FRONTEND_URL  // Production
     ].filter(Boolean);
-    
+
     // Allow requests with no origin (mobile apps, curl, etc.)
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
@@ -32,8 +32,15 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(logger);
 
-app.use('/api', routes);
+// Root route — friendly response instead of "Cannot GET /"
+app.get('/', (req, res) => {
+  res.json({
+    message: 'CommunityHub API is running',
+    docs: 'See /api/health for a health check, or /api/issues for the issues endpoint.'
+  });
+});
 
+app.use('/api', routes);
 app.use(errorHandler);
 
 module.exports = app;
