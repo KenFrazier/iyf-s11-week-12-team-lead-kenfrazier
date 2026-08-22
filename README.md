@@ -48,8 +48,8 @@ cd iyf-s11-week-12-team-lead-kenfrazier), and enter the folder
 - Coordinating a team where two original members became unavailable, requiring onboarding two new teammates mid-project
 
 ## Live Demo
-**Frontend:** [https://communityhub.vercel.app](https://communityhub.vercel.app)  
-**Backend API:** [https://communityhub-api.onrender.com/api](https://communityhub-api.onrender.com/api)
+**Frontend:** [https://communityhub-alpha-cyan.vercel.app](https://communityhub-alpha-cyan.vercel.app)  
+**Backend API:** [https://communityhub-api-h7n6.onrender.com/api](https://communityhub-api-h7n6.onrender.com/api)
 
 ## Deployment Guide
 
