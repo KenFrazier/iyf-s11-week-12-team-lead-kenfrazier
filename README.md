@@ -48,4 +48,90 @@ cd iyf-s11-week-12-team-lead-kenfrazier), and enter the folder
 - Coordinating a team where two original members became unavailable, requiring onboarding two new teammates mid-project
 
 ## Live Demo
-Deployment in progress. Link to be added before final submission.
+**Frontend:** [https://communityhub.vercel.app](https://communityhub.vercel.app)  
+**Backend API:** [https://communityhub-api.onrender.com/api](https://communityhub-api.onrender.com/api)
+
+## Deployment Guide
+
+### Backend Deployment (Render)
+
+1. **Prepare Repository**
+   - Ensure `.gitignore` includes: `node_modules/`, `.env`, `dist/`
+   - Push all changes to GitHub
+
+2. **Create Render Account**
+   - Visit [render.com](https://render.com)
+   - Sign up with GitHub
+
+3. **Create Web Service**
+   - Click "New" → "Web Service"
+   - Connect your GitHub repository
+   - Configure:
+     - **Name:** community-hub-api
+     - **Branch:** main
+     - **Root Directory:** backend
+     - **Build Command:** `npm install`
+     - **Start Command:** `npm start`
+
+4. **Add Environment Variables**
+   - In Render Dashboard, add:
+     - `NODE_ENV=production`
+     - `MONGODB_URI=<your-mongodb-uri>`
+     - `JWT_SECRET=<your-secret-key>`
+     - `FRONTEND_URL=<your-vercel-frontend-url>`
+
+5. **Deploy**
+   - Click "Create Web Service"
+   - Wait for build to complete
+   - Test: `https://your-app.onrender.com/api/health`
+
+### Frontend Deployment (Vercel)
+
+1. **Create Vercel Account**
+   - Visit [vercel.com](https://vercel.com)
+   - Sign up with GitHub
+
+2. **Import Project**
+   - Click "New Project"
+   - Import your repository
+   - Configure:
+     - **Framework Preset:** Vite
+     - **Root Directory:** frontend
+     - **Build Command:** `npm run build`
+     - **Output Directory:** dist
+
+3. **Add Environment Variables**
+   - Add `VITE_API_URL=https://your-api.onrender.com/api`
+
+4. **Deploy**
+   - Click "Deploy"
+   - Wait for build
+   - Visit your deployed site
+
+### Health Check Setup
+
+API includes a health check endpoint at `/api/health` that returns:
+```json
+{
+  "status": "ok",
+  "timestamp": "2026-08-21T12:00:00Z",
+  "uptime": 123.45,
+  "database": "connected"
+}
+```
+
+### Deployment Checklist
+
+- [ ] All CRUD operations work locally
+- [ ] Authentication flow complete
+- [ ] Protected routes configured
+- [ ] Error messages are user-friendly
+- [ ] Loading states visible
+- [ ] Responsive design verified
+- [ ] No console errors
+- [ ] Environment variables configured
+- [ ] Backend deployed and tested
+- [ ] Frontend deployed and tested
+- [ ] API URLs updated in frontend
+- [ ] README updated with live links
+- [ ] Team contributions documented in CONTRIBUTORS.md

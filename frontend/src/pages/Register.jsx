@@ -1,19 +1,23 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 
-function Login({ onSwitchToRegister }) {
+function Register({ onSuccess }) {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('citizen');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { register } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
+
     try {
-      await login({ email, password });
+      await register({ name, email, password, role });
+      if (onSuccess) onSuccess();
     } catch (err) {
       setError(err.message);
     } finally {
@@ -23,8 +27,15 @@ function Login({ onSwitchToRegister }) {
 
   return (
     <div className="auth-card">
-      <h2>Login to CommunityHub</h2>
+      <h2>Create an Account</h2>
       <form onSubmit={handleSubmit} className="auth-form">
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Full name"
+          required
+        />
         <input
           type="email"
           value={email}
@@ -36,21 +47,23 @@ function Login({ onSwitchToRegister }) {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
+          placeholder="Password (min 6 characters)"
+          minLength={6}
           required
         />
+        <select value={role} onChange={(e) => setRole(e.target.value)}>
+          <option value="citizen">Citizen</option>
+          <option value="elder">Elder</option>
+          <option value="specialist">Specialist</option>
+          <option value="admin">Admin</option>
+        </select>
         <button type="submit" disabled={loading}>
-          {loading ? 'Logging in...' : 'Login'}
+          {loading ? 'Creating account...' : 'Register'}
         </button>
       </form>
       {error && <p className="error-text">{error}</p>}
-      {onSwitchToRegister && (
-        <p className="switch-auth">
-          No account? <button onClick={onSwitchToRegister} className="link-btn">Register here</button>
-        </p>
-      )}
     </div>
   );
 }
 
-export default Login;
+export default Register;

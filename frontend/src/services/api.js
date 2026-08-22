@@ -24,10 +24,24 @@ const request = async (endpoint, options = {}) => {
     throw new Error('Session expired');
   }
 
-  const data = await response.json();
+  const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw new Error(data.error || 'Request failed');
+    let errorMsg;
+    
+    // Handle different error response formats
+    if (data.errors && Array.isArray(data.errors)) {
+      // Validation errors array
+      errorMsg = data.errors.join(', ');
+    } else if (data.error) {
+      errorMsg = data.error;
+    } else if (data.message) {
+      errorMsg = data.message;
+    } else {
+      errorMsg = `Request failed with status ${response.status}`;
+    }
+    
+    throw new Error(errorMsg);
   }
 
   return data;

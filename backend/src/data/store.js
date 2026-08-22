@@ -11,7 +11,7 @@ let issues = [
     id: 2,
     title: "Streetlight not working near school",
     description: "The streetlight has been off for a week, unsafe for children.",
-    reportedBy: "Ronn Karimi",
+    reportedBy: "Alvan Ninjago",
     status: "acknowledged",
     createdAt: "2026-01-16T14:30:00Z"
   }
@@ -23,8 +23,7 @@ let comments = [
 
 let users = [
   { id: 1, name: "Frazier Kennedy", email: "frazier@communityhub.com", role: "admin" },
-  { id: 2, name: "Ronn Karimi", email: "ronn@communityhub.com", role: "citizen" },
-  { id: 3, name: "Alvan Ninjago", email: "alvan@communityhub.com", role: "citizen" }
+  { id: 2, name: "Alvan Ninjago", email: "alvan@communityhub.com", role: "citizen" }
 ];
 
 let nextIssueId = 3;

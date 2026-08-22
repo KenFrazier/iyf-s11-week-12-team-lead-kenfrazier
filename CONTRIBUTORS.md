@@ -5,7 +5,6 @@
 | Name | GitHub | Role | Contributions |
 |------|--------|------|---------------|
 | Frazier Kennedy | KenFrazier | Team Lead | Project setup, backend architecture, MongoDB integration, JWT authentication, authorization, admin dashboard, frontend-backend integration |
-| Ronn Karimi | RonnKarimi | Developer | Issue Reporting and Listing feature |
 | Alvan Ninjago | ninjago618 | Developer | Status Updates and Comments frontend |
 
 ## Contribution Breakdown
@@ -18,9 +17,6 @@
 - Implemented role-based authorization and an admin-only dashboard
 - Built the shared frontend API service layer and connected login end to end
 - Reviewed and merged team pull requests
-
-### Ronn Karimi
-- Building the Issue Reporting and Listing frontend feature
 
 ### Alvan Ninjago
 - Built the Status Updates and Comments frontend feature, merged in a pull request
