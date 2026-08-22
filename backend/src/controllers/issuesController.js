@@ -1,4 +1,3 @@
-// Feature ownership: Ronn Karimi (Feature: Issue Reporting & Listing)
 // Now using MongoDB via Mongoose instead of in-memory data.
 
 const Issue = require('../models/Issue');
