@@ -33,7 +33,7 @@ function AppContent() {
   return (
     <div className="app-shell">
       <header className="navbar">
-        <h1>CommunityHub</h1>
+        <h1>Tatua Chapchap</h1>
         <div className="navbar-time" aria-label="Current local time">
           <span>Local time</span>
           <CurrentTime />
@@ -57,7 +57,7 @@ function AppContent() {
               <>
                 <Login />
                 <div className="auth-switch">
-                  <span>New to CommunityHub?</span>
+                  <span>New to Tatua Chapchap?</span>
                   <button type="button" onClick={() => setAuthView('register')}>
                     Create an account
                   </button>

@@ -23,7 +23,7 @@ function Login({ onSwitchToRegister }) {
 
   return (
     <div className="auth-card">
-      <h2>Login to CommunityHub</h2>
+      <h2>Login to Tatua Chapchap</h2>
       <form onSubmit={handleSubmit} className="auth-form">
         <input
           type="email"
